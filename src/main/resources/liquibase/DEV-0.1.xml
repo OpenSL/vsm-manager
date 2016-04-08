@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<changeSet id="DEV-0.1-1" author="Rangalal Gamage" context="schema_change">
+		<comment>Create new table customers.</comment>
+		<createTable tableName="customers">
+            <column autoIncrement="${auto.increment}" name="id" type="BIGINT">
+				<constraints primaryKey="${auto.increment}" nullable="false"/>
+			</column>
+			<column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mobile" type="VARCHAR(15)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(100)"/>
+			<column name="identification" type="VARCHAR(20)"/>			
+			<column name="is_registered" type="boolean" defaultValueBoolean="false"/>
+            <column name="created" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified" type="DATETIME"/>
+        </createTable>
+        <rollback>
+			<dropTable tableName="customers" />
+		</rollback>
+	</changeSet>
+	
+	<changeSet id="DEV-0.1-2" author="Rangalal Gamage" dbms="oracle" context="schema_change">
+		<comment>Create constraint name pk_customer for table customers.</comment>
+		<addPrimaryKey constraintName="pk_customer" columnNames="id"
+			tableName="customers" tablespace="TBL_SPACE_VSM"/>
+	</changeSet>
+	<!-- createSequence is not support for MySQL -->
+	<!--  
+	<changeSet id="DEV-0.1-3" author="Rangalal Gamage" context="schema_change">
+		<comment>Create sequence name seq_customer for table customers.</comment>
+		<createSequence sequenceName="seq_customer"
+			startValue="1" incrementBy="1" />
+	</changeSet>
+	-->
+	<changeSet id="DEV-0.1-4" author="Rangalal Gamage" context="schema_change">
+		<comment>Create index name idx_cus_identification with column identification for table customers.</comment>
+		<createIndex tableName="customers" indexName="idx_cus_identification">
+			<column name="identification" />
+		</createIndex>
+	</changeSet> 
+	
+	<changeSet id="DEV-0.1-5" author="Rangalal Gamage" context="schema_change">
+		<comment>Create new table vehicle_categories.</comment>
+		<createTable tableName="vehicle_categories">
+            <column autoIncrement="${auto.increment}" name="id" type="BIGINT">
+				<constraints primaryKey="${auto.increment}" nullable="false"/>
+			</column>
+			<column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified" type="DATETIME"/>
+        </createTable>
+         <rollback>
+			<dropTable tableName="vehicle_categories" />
+		</rollback>
+	</changeSet>
+	
+	<changeSet id="DEV-0.1-6" author="Rangalal Gamage" dbms="oracle" context="schema_change">
+		<comment>Create constraint name pk_vehicle_category for table vehicle_categories.</comment>
+		<addPrimaryKey constraintName="pk_vehicle_category" columnNames="id"
+			tableName="vehicle_categories" tablespace="TBL_SPACE_VSM"/>
+	</changeSet>
+	
+	<changeSet id="DEV-0.1-7" author="Rangalal Gamage" context="schema_change">
+		<comment>Create new table vehicle_sub_categories.</comment>
+		<createTable tableName="vehicle_sub_categories">
+            <column autoIncrement="${auto.increment}" name="id" type="BIGINT">
+				<constraints primaryKey="${auto.increment}" nullable="false"/>
+			</column>
+			<column name="vehicle_category_id" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified" type="DATETIME"/>
+        </createTable>
+         <rollback>
+			<dropTable tableName="vehicle_sub_categories" />
+		</rollback>
+	</changeSet>
+	
+	<changeSet id="DEV-0.1-8" author="Rangalal Gamage" dbms="oracle" context="schema_change">
+		<comment>Create constraint name pk_vehicle_sub_category for table vehicle_sub_categories.</comment>
+		<addPrimaryKey constraintName="pk_vehicle_sub_category" columnNames="id"
+			tableName="vehicle_sub_categories" tablespace="TBL_SPACE_VSM"/>
+	</changeSet>
+	
+	<changeSet id="DEV-0.1-9" author="Rangalal Gamage" context="schema_change">
+		<comment>Create new table vehicles.</comment>
+		<createTable tableName="vehicles">
+            <column autoIncrement="${auto.increment}" name="id" type="BIGINT">
+				<constraints primaryKey="${auto.increment}" nullable="false"/>
+			</column>
+			<column name="vehicle_number" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_service_date" type="DATETIME">
+             	<constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="vehicle_category_id" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="vehicle_sub_category_id" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+            <column name="additional_description" type="VARCHAR(255)"/>
+            <column name="created" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+         <rollback>
+			<dropTable tableName="vehicles" />
+		</rollback>
+	</changeSet>
+	
+	<changeSet id="DEV-0.1-10" author="Rangalal Gamage" dbms="oracle" context="schema_change">
+		<comment>Create constraint name pk_vehicle for table vehicles.</comment>
+		<addPrimaryKey constraintName="pk_vehicle" columnNames="id"
+			tableName="vehicles" tablespace="TBL_SPACE_VSM"/>
+	</changeSet>
+	
+	<changeSet id="DEV-0.1-11" author="Rangalal Gamage" context="schema_change">
+		<addForeignKeyConstraint constraintName="fk_customers_id" referencedTableName="customers"  referencedColumnNames="id"  
+		baseTableName="vehicles" baseColumnNames="customer_id"/>
+		<comment>Add foreign key fk_customers_id reference, to map customer_id of vehicles table to id of customers table</comment>
+	</changeSet>
+	
+	<changeSet id="DEV-0.1-12" author="Rangalal Gamage" context="schema_change">
+		<addForeignKeyConstraint constraintName="fk_vehicle_category_id" referencedTableName="vehicle_categories"  referencedColumnNames="id"  
+		baseTableName="vehicles" baseColumnNames="vehicle_category_id"/>
+		<comment>Add foreign key fk_vehicle_category_id reference, to map vehicle_category_id of vehicles table to id of vehicle_categories table</comment>
+	</changeSet>
+	
+	<changeSet id="DEV-0.1-13" author="Rangalal Gamage" context="schema_change">
+		<addForeignKeyConstraint constraintName="fk_vehicle_sub_category_id" referencedTableName="vehicle_sub_categories"  referencedColumnNames="id"  
+		baseTableName="vehicles" baseColumnNames="vehicle_sub_category_id"/>
+		<comment>Add foreign key fk_vehicle_sub_category_id reference, to map vehicle_sub_category_id of vehicles table to id of vehicle_sub_categories table</comment>
+	</changeSet>
+	
+	<changeSet id="DEV-0.1-14" author="Rangalal Gamage" context="schema_change">
+		<comment>Create new table service_types.</comment>
+		<createTable tableName="service_types">
+            <column autoIncrement="${auto.increment}" name="id" type="BIGINT">
+				<constraints primaryKey="${auto.increment}" nullable="false"/>
+			</column>
+			<column name="service_type" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+         <rollback>
+			<dropTable tableName="service_types" />
+		</rollback>
+	</changeSet>
+	
+	<changeSet id="DEV-0.1-15" author="Rangalal Gamage" dbms="oracle" context="schema_change">
+		<comment>Create constraint name pk_service_type for table service_types.</comment>
+		<addPrimaryKey constraintName="pk_service_type" columnNames="id"
+			tableName="service_types" tablespace="TBL_SPACE_VSM"/>
+	</changeSet>
+	
+	<changeSet id="DEV-0.1-16" author="Rangalal Gamage" context="schema_change">
+		<comment>Create new table services.</comment>
+		<createTable tableName="services">
+            <column autoIncrement="${auto.increment}" name="id" type="BIGINT">
+				<constraints primaryKey="${auto.increment}" nullable="false"/>
+			</column>
+			<column name="name" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(250)"/>
+            <column name="unit_price" type="DECIMAL(19,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+         <rollback>
+			<dropTable tableName="services" />
+		</rollback>
+	</changeSet>
+	
+	<changeSet id="DEV-0.1-17" author="Rangalal Gamage" dbms="oracle" context="schema_change">
+		<comment>Create constraint name pk_service for table services.</comment>
+		<addPrimaryKey constraintName="pk_service" columnNames="id"
+			tableName="services" tablespace="TBL_SPACE_VSM"/>
+	</changeSet>
+	
+	<changeSet id="DEV-0.1-18" author="Rangalal Gamage" context="schema_change">
+		<comment>Create new table service_packages.</comment>
+		<createTable tableName="service_packages">
+            <column autoIncrement="${auto.increment}" name="id" type="BIGINT">
+				<constraints primaryKey="${auto.increment}" nullable="false"/>
+			</column>
+			<column name="service_id" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="package_name" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(19,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+         <rollback>
+			<dropTable tableName="service_packages" />
+		</rollback>
+	</changeSet>
+	
+	<changeSet id="DEV-0.1-19" author="Rangalal Gamage" dbms="oracle" context="schema_change">
+		<comment>Create constraint name pk_service_package for table service_packages.</comment>
+		<addPrimaryKey constraintName="pk_service_package" columnNames="id"
+			tableName="service_packages" tablespace="TBL_SPACE_VSM"/>
+	</changeSet>
+	
+	<changeSet id="DEV-0.1-20" author="Rangalal Gamage" context="schema_change">
+		<addForeignKeyConstraint constraintName="fk_service_id" referencedTableName="services"  referencedColumnNames="id"  
+		baseTableName="service_packages" baseColumnNames="service_id"/>
+		<comment>Add foreign key fk_service_id reference, to map service_id of service_packages table to id of services table</comment>
+	</changeSet>
+</databaseChangeLog>

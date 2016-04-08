@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<!-- Define common properties and pre-conditions here, which can be used in other changelog file(s). -->
+	<!-- Refer http://www.liquibase.org/documentation/ for more infomation. -->
+	<property name="auto.increment" value="true" dbms="hsqldb" />
+	<property name="boolean.type" value="BIT" dbms="hsqldb" />
+	<property name="text.type" value="LONGVARCHAR" dbms="hsqldb" />
+	
+	<property name="auto.increment" value="true" dbms="mysql" />
+	<property name="boolean.type" value="BIT" dbms="mysql" />
+	<property name="text.type" value="TEXT" dbms="mysql" />
+
+	<property name="auto.increment" value="false" dbms="oracle" />
+	<property name="boolean.type" value="NUMBER(1,0)" dbms="oracle" />
+	<property name="text.type" value="CLOB" dbms="oracle" />
+	<property name="tablespace.name" value="TBL_SPACE_VSM" dbms="oracle" />
+	
+	<!-- Schema compatibility: default schema (includes) is compatible only to run on either HSQL, MySQL OR Oracle. -->
+	<preConditions>
+		<or>
+			<and>
+				<dbms type="hsqldb" />
+			</and>
+			<and>
+				<dbms type="mysql" />
+			</and>
+			<and>
+				<dbms type="oracle" />
+			</and>
+		</or>
+	</preConditions>
+
+</databaseChangeLog> 

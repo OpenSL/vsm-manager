@@ -1,0 +1,137 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>lk.saf.vsmmanager</groupId>
+	<artifactId>vsm-manager</artifactId>
+	<packaging>war</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>VSM Manager Maven Webapp</name>
+	<description>Vehicle Service Manager</description>
+	<url>http://maven.apache.org</url>
+
+	<organization>
+		<name>SAF</name>
+		<url>http://sooryaagrifarm.com/</url>
+	</organization>
+
+	<!-- configure project dependencies. -->
+	<dependencies>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<!-- Replace with the version of the MySQL driver you want to use -->
+			<version>${mysql-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>${hsqldb-version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit-version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<!-- configure project profiles. -->
+	<!-- to execute run command : mvn install -P<profile_name> -->
+	<profiles>
+		<profile>
+			<id>mysql</id>
+			<!-- to execute run command : mvn install -Pmysql -->
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.liquibase</groupId>
+						<artifactId>liquibase-maven-plugin</artifactId>
+						<version>${liquibase-version}</version>
+						<executions>
+							<execution>
+								<phase>process-resources</phase>
+								<configuration>
+									<changeLogFile>src/main/resources/liquibase/db.changelog-master.xml</changeLogFile>
+									<driver>${mysql-db-driver}</driver>
+									<url>${mysql-db-url}</url>
+									<username>${mysql-db-user}</username>
+									<password>${mysql-db-password}</password>
+									<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+									<contexts>${liquibaseContext}</contexts>
+								</configuration>
+								<goals>
+									<goal>updateSQL</goal>
+									<goal>update</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<build>
+		<finalName>vsm-manager</finalName>
+		<plugins>
+			<!-- load liquibase configurations from property file. -->
+			<!-- 
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<version>${liquibase-version}</version>
+				<configuration>
+					<propertyFile>src/main/resources/liquibase/liquibase.properties</propertyFile>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>update</goal>
+							<goal>updateSQL</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			-->
+			
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<version>${liquibase-version}</version>
+				<executions>
+					<execution>
+						<id>test</id>
+						<phase>process-resources</phase>
+						<configuration>
+							<changeLogFile>src/main/resources/liquibase/db.changelog-master.xml</changeLogFile>
+							<migrationSqlOutputFile>${project.build.directory}/classes/config/schema/hsqldb.sql</migrationSqlOutputFile>
+							<driver>org.hsqldb.jdbcDriver</driver>
+							<url>jdbc:hsqldb:mem:vsm</url>
+							<username>sa</username>
+							<password />
+						</configuration>
+						<goals>
+							<goal>updateSQL</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<!-- configure project properties. -->
+	<properties>
+		<junit-version>3.8.1</junit-version>
+		<hsqldb-version>2.3.2</hsqldb-version>
+		<liquibase-version>3.4.2</liquibase-version>
+		<mysql-version>5.1.18</mysql-version>
+		<mysql-db-driver>com.mysql.jdbc.Driver</mysql-db-driver>
+		<mysql-db-url>jdbc:mysql://localhost/vsm</mysql-db-url>
+		<mysql-db-user>root</mysql-db-user>
+		<mysql-db-password></mysql-db-password>
+		<liquibase-context>schema_change,data_migrate,cleanup</liquibase-context>
+	</properties>
+</project>
