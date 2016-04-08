@@ -130,8 +130,8 @@
 		<mysql-version>5.1.18</mysql-version>
 		<mysql-db-driver>com.mysql.jdbc.Driver</mysql-db-driver>
 		<mysql-db-url>jdbc:mysql://localhost/vsm</mysql-db-url>
-		<mysql-db-user>root</mysql-db-user>
-		<mysql-db-password></mysql-db-password>
+		<mysql-db-user>vsmUser</mysql-db-user>
+		<mysql-db-password>password</mysql-db-password>
 		<liquibase-context>schema_change,data_migrate,cleanup</liquibase-context>
 	</properties>
 </project>
